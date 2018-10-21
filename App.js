@@ -1,62 +1,45 @@
 import React from 'react';
-import { Platform, StatusBar, StyleSheet, View } from 'react-native';
-import { AppLoading, Asset, Font, Icon } from 'expo';
-import AppNavigator from './navigation/AppNavigator';
+import {createBottomTabNavigator} from 'react-navigation';
+import BMI from './sources/bmi-screen'
+import Calories from './sources/calories-screen';
+import Measure from './sources/measure';
+import Measure2 from './sources/measure2';
+import { MaterialIcons, Entypo  } from '@expo/vector-icons';
 
-export default class App extends React.Component {
-  state = {
-    isLoadingComplete: false,
-  };
-
-  render() {
-    if (!this.state.isLoadingComplete && !this.props.skipLoadingScreen) {
-      return (
-        <AppLoading
-          startAsync={this._loadResourcesAsync}
-          onError={this._handleLoadingError}
-          onFinish={this._handleFinishLoading}
-        />
-      );
-    } else {
-      return (
-        <View style={styles.container}>
-          {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-          <AppNavigator />
-        </View>
-      );
-    }
-  }
-
-  _loadResourcesAsync = async () => {
-    return Promise.all([
-      Asset.loadAsync([
-        require('./assets/images/robot-dev.png'),
-        require('./assets/images/robot-prod.png'),
-      ]),
-      Font.loadAsync({
-        // This is the font that we are using for our tab bar
-        ...Icon.Ionicons.font,
-        // We include SpaceMono because we use it in HomeScreen.js. Feel free
-        // to remove this if you are not using it in your app
-        'space-mono': require('./assets/fonts/SpaceMono-Regular.ttf'),
-      }),
-    ]);
-  };
-
-  _handleLoadingError = error => {
-    // In this case, you might want to report the error to your error
-    // reporting service, for example Sentry
-    console.warn(error);
-  };
-
-  _handleFinishLoading = () => {
-    this.setState({ isLoadingComplete: true });
-  };
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
+const AppNav = createBottomTabNavigator ({
+  Kalorien: {
+    screen: Calories,
+    navigationOptions: {
+      tabBarIcon: ({ tintColor }) => {
+        return <MaterialIcons name="fitness-center" size={26} color={tintColor} />
+      },
+    },
   },
-});
+  BMI: {
+    screen: BMI,
+    navigationOptions: {
+      tabBarIcon: ({ tintColor }) => {
+        return <MaterialIcons name="accessibility" size={26} color={tintColor} />
+      },
+    },
+  },
+  Messen: {
+    screen: Measure,
+    navigationOptions: {
+      tabBarIcon: ({ tintColor }) => {
+        return <Entypo name="ruler" size={26} color={tintColor} />
+      },
+    },
+  },
+  'Messen 2': {
+    screen: Measure2,
+    navigationOptions: {
+      tabBarIcon: ({ tintColor }) => {
+        return <Entypo name="ruler" size={26} color={tintColor} />
+      },
+    },
+  },
+}, {
+})
+
+export default AppNav;
